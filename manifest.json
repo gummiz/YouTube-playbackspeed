@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "YouTube Playback Speed Control",
+    "description": "This extension allows to control YouTube video playback speed using keyboard shortcuts.",
+    "version": "1.0",
+    "permissions": [
+        "activeTab", "scripting"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "change_playback_speed": {
+            "suggested_key": {
+                "default": "Alt+Y",
+                "mac": "Alt+Y"
+            },
+            "description": "Change YouTube Video Playback Speed"
+        }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["contentScript.js"],
+            "matches": ["<all_urls>"],
+            "use_dynamic_url": false
+        }
+    ]
+}

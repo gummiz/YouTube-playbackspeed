@@ -5,9 +5,14 @@
 Only available in Chromium Browsers.
 
 ## Installation
-Go to your local Browser Extension Manager, make sure you have development mode enabled. 
-Press the Load unpacked extension button and link to the downloaded git repo. 
+1. Download the ZIP file.
+2. Extract the ZIP file.
+3. Go to your Chromium Browser Extension Manager, make sure you have development mode enabled.
+4. Drag & drop the extracted folder to your Extensions folder.
 
+Done.
 
 ## Usage
-Go an any Youtube Video and press **Alt + Y** to change playback speed.
+Go to http://www.youtube.com and watch every video you want. By pressing **Alt + Y** you can change the playback speed to 1.5x. By pressing it again you can change it back to 1x.
+
+Enjoy!

@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "YouTube Playback Speed Control Extension",
   "description": "This extension allows to control YouTube video playback speed using keyboard shortcuts.",
-  "version": "1.2",
-  "permissions": ["activeTab", "scripting"],
+  "version": "1.2.1",
+  "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -22,5 +22,12 @@
       "description": "Reset YouTube Video Playback Speed to 1x"
     }
   },
-  "host_permissions": ["*://*.youtube.com/*"]
+  "host_permissions": ["*://*.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }

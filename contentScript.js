@@ -42,11 +42,11 @@ if (!video) {
     console.log('No video element found');
 } else {
     console.log('Video element found:', video);
-    if (video.playbackRate === 1) {
-        video.playbackRate = 1.5;
-    } else {
-        video.playbackRate = 1;
-    }
+    // if (video.playbackRate === 1) {
+    //     video.playbackRate = 1.5;
+    // } else {
+    //     video.playbackRate = 1;
+    // }
     console.log('Playback speed now:', video.playbackRate);
     showSpeedIndicator(video.playbackRate);
 }

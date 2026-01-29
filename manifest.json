@@ -8,20 +8,16 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "action": {},
   "commands": {
-    "change_playback_speed": {
-      "suggested_key": {
-        "default": "Alt+Y"
-      },
-      "description": "Change YouTube Video Playback Speed"
-    },
-    "reset_playback_speed": {
+    "reset_speed": {
       "suggested_key": {
         "default": "Alt+Shift+Y"
       },
       "description": "Reset YouTube Video Playback Speed to 1x"
     }
   },
+
   "host_permissions": ["*://*.youtube.com/*"],
   "content_scripts": [
     {

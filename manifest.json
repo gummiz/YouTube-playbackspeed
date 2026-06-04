@@ -5,8 +5,7 @@
   "version": "1.3.0",
   "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "action": {},
   "commands": {

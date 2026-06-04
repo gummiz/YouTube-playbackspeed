@@ -1,33 +1,23 @@
-console.log("Background script running - v2");
+console.log("Background script running - v3");
 
-// Check what commands are registered
-chrome.commands.getAll((commands) => {
-    console.log('Registered commands:', commands);
-});
+function dispatchToTab(tabId, action) {
+    chrome.scripting.executeScript({
+        target: { tabId },
+        func: (action) => {
+            document.dispatchEvent(new CustomEvent('yt-speed-command', { detail: { action } }));
+        },
+        args: [action]
+    }).catch(err => console.error('executeScript failed:', err));
+}
 
-// Fallback: Click the extension icon to trigger speed change (for debugging)
 chrome.action.onClicked.addListener((tab) => {
-    console.log('Extension icon clicked on tab:', tab.id);
-    chrome.tabs.sendMessage(tab.id, { action: 'change_playback_speed' })
-        .catch(err => console.error('Icon click failed:', err));
+    dispatchToTab(tab.id, 'change_playback_speed');
 });
 
 chrome.commands.onCommand.addListener((command) => {
     console.log('Command received:', command);
-    if (command === 'change_playback_speed' || command === 'reset_speed') {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            const tab = tabs[0];
-            if (!tab) {
-                console.error('No active tab found');
-                return;
-            }
-            chrome.tabs.sendMessage(tab.id, {
-                action: command
-            }).then(() => {
-                console.log('Message sent successfully to tab', tab.id);
-            }).catch(err => {
-                console.error('Failed to send message. Is the content script loaded?', err);
-            });
-        });
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs[0]) { console.error('No active tab found'); return; }
+        dispatchToTab(tabs[0].id, command);
+    });
 });

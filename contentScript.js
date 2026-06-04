@@ -133,11 +133,8 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('Message received:', request);
-    if (request.action === 'change_playback_speed') {
-        toggleSpeed(false);
-    } else if (request.action === 'reset_speed') {
-        toggleSpeed(true);
-    }
+document.addEventListener('yt-speed-command', (e) => {
+    const action = e.detail?.action;
+    if (action === 'change_playback_speed') toggleSpeed(false);
+    else if (action === 'reset_speed') toggleSpeed(true);
 });

@@ -133,14 +133,14 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Direct keyboard listener — bypasses background script entirely.
-// e.code is layout-independent (always 'KeyY' for Y regardless of modifiers).
-document.addEventListener('keydown', (e) => {
+// Direct keyboard listener — capture phase so YouTube's stopPropagation() can't block it.
+// e.code is layout-independent (always 'KeyY' for the Y key regardless of modifiers).
+window.addEventListener('keydown', (e) => {
     if (e.altKey && e.shiftKey && e.code === 'KeyY') {
         e.preventDefault();
         toggleSpeed(true);
     }
-});
+}, true); // true = capture phase
 
 // Fallback handler for executeScript-based dispatch (kept for completeness)
 document.addEventListener('yt-speed-command', (e) => {

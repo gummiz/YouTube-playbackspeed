@@ -51,7 +51,7 @@ function toggleSpeed(reset = false) {
         else if (Math.abs(currentSpeed - 1.25) < 0.1) video.playbackRate = 1.5;
         else if (Math.abs(currentSpeed - 1.5) < 0.1) video.playbackRate = 1.75;
         else if (Math.abs(currentSpeed - 1.75) < 0.1) video.playbackRate = 2;
-        else video.playbackRate = 1.25; // Loop back to 1.25x, skip 1x (reset via Turtle only)
+        else video.playbackRate = 1;
     }
 
     console.log('Playback speed now:', video.playbackRate);
@@ -133,11 +133,27 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('Message received:', request);
-    if (request.action === 'change_playback_speed') {
-        toggleSpeed(false);
-    } else if (request.action === 'reset_speed') {
-        toggleSpeed(true);
+// Keyboard shortcuts — handled directly in the content script (capture phase bypasses
+// YouTube's stopPropagation). Covers QWERTY (KeyY) and QWERTZ (KeyZ) layouts.
+//   Option+Y           → cycle speed
+//   Option+Shift+Y     → reset to 1x
+window.addEventListener('keydown', (e) => {
+    if (!e.altKey || e.metaKey || e.ctrlKey) return;
+    const isYKey = e.code === 'KeyY' || e.code === 'KeyZ';
+    if (!isYKey) return;
+
+    if (e.shiftKey) {
+        e.preventDefault();
+        toggleSpeed(true);  // reset
+    } else {
+        e.preventDefault();
+        toggleSpeed(false); // cycle
     }
+}, true);
+
+// Fallback handler for executeScript-based dispatch from background
+document.addEventListener('yt-speed-command', (e) => {
+    const action = e.detail?.action;
+    if (action === 'change_playback_speed') toggleSpeed(false);
+    else if (action === 'reset_speed') toggleSpeed(true);
 });

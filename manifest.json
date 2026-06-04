@@ -9,12 +9,6 @@
   },
   "action": {},
   "commands": {
-    "change_playback_speed": {
-      "suggested_key": {
-        "default": "Alt+Y"
-      },
-      "description": "Cycle YouTube Video Playback Speed"
-    },
     "reset_speed": {
       "suggested_key": {
         "default": "Alt+Shift+Y"

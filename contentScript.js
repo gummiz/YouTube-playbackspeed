@@ -133,14 +133,28 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Direct keyboard listener — capture phase so YouTube's stopPropagation() can't block it.
-// e.code is layout-independent (always 'KeyY' for the Y key regardless of modifiers).
+// DEBUG: log every keydown so we can see what's actually reaching the content script
+window.addEventListener('keydown', (e) => {
+    if (e.altKey || e.metaKey) { // only log modifier combos to avoid noise
+        const msg = `key=${e.key} code=${e.code} alt=${e.altKey} shift=${e.shiftKey} meta=${e.metaKey}`;
+        console.log('[yt-speed keydown]', msg);
+
+        // Show on-screen for easy reading
+        const dbg = document.createElement('div');
+        dbg.style.cssText = 'position:fixed;bottom:80px;right:20px;z-index:9999999;background:#111;color:#0f0;padding:8px 12px;font-size:13px;font-family:monospace;border-radius:4px;';
+        dbg.textContent = '⌨ ' + msg;
+        document.documentElement.appendChild(dbg);
+        setTimeout(() => dbg.remove(), 3000);
+    }
+}, true);
+
+// Reset shortcut: Option+Shift+Y
 window.addEventListener('keydown', (e) => {
     if (e.altKey && e.shiftKey && e.code === 'KeyY') {
         e.preventDefault();
         toggleSpeed(true);
     }
-}, true); // true = capture phase
+}, true);
 
 // Fallback handler for executeScript-based dispatch (kept for completeness)
 document.addEventListener('yt-speed-command', (e) => {

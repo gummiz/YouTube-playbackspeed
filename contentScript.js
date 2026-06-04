@@ -51,7 +51,7 @@ function toggleSpeed(reset = false) {
         else if (Math.abs(currentSpeed - 1.25) < 0.1) video.playbackRate = 1.5;
         else if (Math.abs(currentSpeed - 1.5) < 0.1) video.playbackRate = 1.75;
         else if (Math.abs(currentSpeed - 1.75) < 0.1) video.playbackRate = 2;
-        else video.playbackRate = 1.25; // Loop back to 1.25x, skip 1x (reset via Turtle only)
+        else video.playbackRate = 1;
     }
 
     console.log('Playback speed now:', video.playbackRate);

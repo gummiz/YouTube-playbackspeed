@@ -14,19 +14,13 @@ chrome.action.onClicked.addListener((tab) => {
 
 chrome.commands.onCommand.addListener((command) => {
     console.log('Command received:', command);
-    if (command === 'reset_speed') {
+    if (command === 'change_playback_speed' || command === 'reset_speed') {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
             const tab = tabs[0];
-            console.log('Found active tab:', tab);
-
             if (!tab) {
                 console.error('No active tab found');
                 return;
             }
-
-            // Attempt to send message regardless of URL check (content script will handle it or it will fail if not injected)
-            console.log('Attempting to send message to tab:', tab.id);
-
             chrome.tabs.sendMessage(tab.id, {
                 action: command
             }).then(() => {

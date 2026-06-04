@@ -135,6 +135,14 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 document.addEventListener('yt-speed-command', (e) => {
     const action = e.detail?.action;
+    console.log('[yt-speed] DOM event received:', action);
+    // Debug: flash green overlay to confirm content script received the event
+    const dbg = document.createElement('div');
+    dbg.style.cssText = 'position:fixed;top:10px;left:10px;z-index:9999999;background:limegreen;color:black;padding:8px 12px;font-size:14px;border-radius:4px;';
+    dbg.textContent = '✅ content script got: ' + action;
+    document.documentElement.appendChild(dbg);
+    setTimeout(() => dbg.remove(), 3000);
+
     if (action === 'change_playback_speed') toggleSpeed(false);
     else if (action === 'reset_speed') toggleSpeed(true);
 });

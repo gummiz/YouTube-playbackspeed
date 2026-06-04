@@ -133,23 +133,25 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-// DEBUG: log every modifier keydown so we can verify what reaches the content script
+// Keyboard shortcuts — handled directly in the content script (capture phase bypasses
+// YouTube's stopPropagation). Covers QWERTY (KeyY) and QWERTZ (KeyZ) layouts.
+//   Option+Y           → cycle speed
+//   Option+Shift+Y     → reset to 1x
 window.addEventListener('keydown', (e) => {
-    if (e.altKey || e.metaKey) {
-        console.log('[yt-speed keydown]', `key=${e.key} code=${e.code} alt=${e.altKey} shift=${e.shiftKey} meta=${e.metaKey}`);
-    }
-}, true);
+    if (!e.altKey || e.metaKey || e.ctrlKey) return;
+    const isYKey = e.code === 'KeyY' || e.code === 'KeyZ';
+    if (!isYKey) return;
 
-// Reset shortcut: Option+Shift+Y
-// KeyY = QWERTY layout, KeyZ = QWERTZ layout (Y and Z are swapped on German keyboards)
-window.addEventListener('keydown', (e) => {
-    if (e.altKey && e.shiftKey && (e.code === 'KeyY' || e.code === 'KeyZ')) {
+    if (e.shiftKey) {
         e.preventDefault();
-        toggleSpeed(true);
+        toggleSpeed(true);  // reset
+    } else {
+        e.preventDefault();
+        toggleSpeed(false); // cycle
     }
 }, true);
 
-// Fallback handler for executeScript-based dispatch (kept for completeness)
+// Fallback handler for executeScript-based dispatch from background
 document.addEventListener('yt-speed-command', (e) => {
     const action = e.detail?.action;
     if (action === 'change_playback_speed') toggleSpeed(false);

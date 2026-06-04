@@ -141,8 +141,9 @@ window.addEventListener('keydown', (e) => {
 }, true);
 
 // Reset shortcut: Option+Shift+Y
+// KeyY = QWERTY layout, KeyZ = QWERTZ layout (Y and Z are swapped on German keyboards)
 window.addEventListener('keydown', (e) => {
-    if (e.altKey && e.shiftKey && e.code === 'KeyY') {
+    if (e.altKey && e.shiftKey && (e.code === 'KeyY' || e.code === 'KeyZ')) {
         e.preventDefault();
         toggleSpeed(true);
     }

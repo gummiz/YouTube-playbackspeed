@@ -17,13 +17,13 @@ Two buttons appear directly in the YouTube player controls — a **bunny** and a
 | At 1x speed | ![Bunny button](screenshots/bunny.png) |
 | Above 1x speed | ![Turtle + speed button](screenshots/turtle.png) |
 
-- **Bunny** — click or press `Option+Y` (Mac) / `Alt+Y` (Windows) to cycle through speeds
+- **Bunny** — click to cycle forward through the speeds (or use the keyboard shortcuts below)
 - **Turtle** — click or press `Option+Shift+Y` (Mac) / `Alt+Shift+Y` (Windows) to instantly reset to 1x. It disappears when you're already at normal speed.
 
 ### Speed cycle
 
 ```
-1x → 1.25x → 1.5x → 1.75x → 2x → 1x → ...
+0.25x → 0.5x → 0.75x → 1x → 1.25x → 1.5x → 1.75x → 2x → 0.25x → ...
 ```
 
 A small overlay confirms the current speed whenever it changes.
@@ -32,7 +32,8 @@ A small overlay confirms the current speed whenever it changes.
 
 | Shortcut (Mac) | Shortcut (Win/Linux) | Action |
 |---|---|---|
-| `Option + Y` | `Alt + Y` | Cycle to next speed |
+| `Option + X` | `Alt + X` | Cycle forward (faster) |
+| `Option + Y` | `Alt + Y` | Cycle backward (slower) |
 | `Option + Shift + Y` | `Alt + Shift + Y` | Reset to 1x |
 
 > **Note for German (QWERTZ) keyboards:** the extension maps to the physical key position, so pressing your `Y` key works as expected — no remapping needed.

@@ -36,7 +36,10 @@ function showSpeedIndicator(speed) {
     }, 1500);
 }
 
-function toggleSpeed(reset = false) {
+const SPEED_CYCLE = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+// direction: +1 cycles forward (faster), -1 cycles backward (slower). Wraps around.
+function toggleSpeed(reset = false, direction = 1) {
     const video = document.querySelector('video');
     if (!video) {
         console.log('No video element found');
@@ -47,11 +50,19 @@ function toggleSpeed(reset = false) {
         video.playbackRate = 1;
     } else {
         const currentSpeed = video.playbackRate;
-        if (Math.abs(currentSpeed - 1) < 0.1) video.playbackRate = 1.25;
-        else if (Math.abs(currentSpeed - 1.25) < 0.1) video.playbackRate = 1.5;
-        else if (Math.abs(currentSpeed - 1.5) < 0.1) video.playbackRate = 1.75;
-        else if (Math.abs(currentSpeed - 1.75) < 0.1) video.playbackRate = 2;
-        else video.playbackRate = 1;
+        // Find the index of the closest cycle speed, then step one place in `direction` (wrapping).
+        let closestIndex = 0;
+        let smallestDiff = Infinity;
+        SPEED_CYCLE.forEach((speed, i) => {
+            const diff = Math.abs(currentSpeed - speed);
+            if (diff < smallestDiff) {
+                smallestDiff = diff;
+                closestIndex = i;
+            }
+        });
+        const len = SPEED_CYCLE.length;
+        const nextIndex = (closestIndex + direction + len) % len;
+        video.playbackRate = SPEED_CYCLE[nextIndex];
     }
 
     console.log('Playback speed now:', video.playbackRate);
@@ -135,19 +146,26 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 // Keyboard shortcuts — handled directly in the content script (capture phase bypasses
 // YouTube's stopPropagation). Covers QWERTY (KeyY) and QWERTZ (KeyZ) layouts.
-//   Option+Y           → cycle speed
+//   Option+X           → cycle forward (faster)
+//   Option+Y           → cycle backward (slower)
 //   Option+Shift+Y     → reset to 1x
 window.addEventListener('keydown', (e) => {
     if (!e.altKey || e.metaKey || e.ctrlKey) return;
-    const isYKey = e.code === 'KeyY' || e.code === 'KeyZ';
-    if (!isYKey) return;
 
-    if (e.shiftKey) {
+    // Y key (KeyZ covers QWERTZ keyboards where Y/Z are swapped).
+    const isYKey = e.code === 'KeyY' || e.code === 'KeyZ';
+    const isXKey = e.code === 'KeyX';
+    if (!isYKey && !isXKey) return;
+
+    if (isYKey && e.shiftKey) {
         e.preventDefault();
-        toggleSpeed(true);  // reset
+        toggleSpeed(true);          // reset to 1x
+    } else if (isXKey) {
+        e.preventDefault();
+        toggleSpeed(false, 1);      // forward (faster)
     } else {
         e.preventDefault();
-        toggleSpeed(false); // cycle
+        toggleSpeed(false, -1);     // backward (slower)
     }
 }, true);
 
